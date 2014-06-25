@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
 
 import static org.lwjgl.util.glu.GLU.gluOrtho2D;
@@ -21,7 +22,8 @@ private boolean done = false;
     private boolean fullscreen = false;
     private final String windowTitle = "NeHe's OpenGL Lesson 5 for LWJGL (3D Shapes)";
     private boolean f1 = false;
-
+    private float tranZ = -6;   // negitive is further into the screen
+    private float rotY = 1;     // positive is pressing to the rigth
     private float rtri;                 // Angle For The Triangle ( NEW )
     private float rquad;                // Angle For The Quad     ( NEW )
     private DisplayMode displayMode;
@@ -45,6 +47,7 @@ private boolean done = false;
                 mainloop();
                 render();
                 Display.update();
+                //Display.sync(120);
             }
             cleanup();
         }
@@ -67,6 +70,39 @@ private boolean done = false;
         if(!Keyboard.isKeyDown(Keyboard.KEY_F1)) {          // Is F1 Being Pressed?
             f1 = false;
         }
+        if(Keyboard.isKeyDown(Keyboard.KEY_S))
+        {
+            if(tranZ < -3.5)
+            tranZ += .01;
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_W))
+        {
+            if(tranZ > -7)
+            tranZ-= .01;
+        }
+        if(tranZ < -4)
+        {
+            if(Keyboard.isKeyDown(Keyboard.KEY_A))
+            {
+                rotY = -1;
+                rquad-=.1;
+            }
+            else if (Keyboard.isKeyDown(Keyboard.KEY_D))
+            {
+                rotY = 1;
+                rquad+=.1;
+            }
+            else 
+            {
+                rquad-=0;
+                rotY = 0;
+            }
+        }
+//        else
+  //      {
+    //        rquad = 0;
+      //  }
+        
     }
 
     private void switchMode() {
@@ -80,42 +116,11 @@ private boolean done = false;
     }
 
     private boolean render() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);          // Clear The Screen And The Depth Buffer
-
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);        
+       
         glLoadIdentity();                          // Reset The Current Modelview Matrix
-
-        glTranslatef(-1.5f,0.0f,-6.0f);                // Move Left 1.5 Units And Into The Screen 6.0
-        glRotatef(rtri,0.0f,1.0f,0.0f);                // Rotate The Triangle On The Y axis ( NEW )
-        glBegin(GL_TRIANGLES);                    // Drawing Using Triangles
-            glColor3f(1.0f,0.0f,0.0f);             // Red
-            glVertex3f( 0.0f, 1.0f, 0.0f);         // Top Of Triangle (Front)
-            glColor3f(0.0f,1.0f,0.0f);             // Green
-            glVertex3f(-1.0f,-1.0f, 1.0f);         // Left Of Triangle (Front)
-            glColor3f(0.0f,0.0f,1.0f);             // Blue
-            glVertex3f( 1.0f,-1.0f, 1.0f);         // Right Of Triangle (Front)
-            glColor3f(1.0f,0.0f,0.0f);             // Red
-            glVertex3f( 0.0f, 1.0f, 0.0f);         // Top Of Triangle (Right)
-            glColor3f(0.0f,0.0f,1.0f);             // Blue
-            glVertex3f( 1.0f,-1.0f, 1.0f);         // Left Of Triangle (Right)
-            glColor3f(0.0f,1.0f,0.0f);             // Green
-            glVertex3f( 1.0f,-1.0f, -1.0f);            // Right Of Triangle (Right)
-            glColor3f(1.0f,0.0f,0.0f);             // Red
-            glVertex3f( 0.0f, 1.0f, 0.0f);         // Top Of Triangle (Back)
-            glColor3f(0.0f,1.0f,0.0f);             // Green
-            glVertex3f( 1.0f,-1.0f, -1.0f);            // Left Of Triangle (Back)
-            glColor3f(0.0f,0.0f,1.0f);             // Blue
-            glVertex3f(-1.0f,-1.0f, -1.0f);            // Right Of Triangle (Back)
-            glColor3f(1.0f,0.0f,0.0f);             // Red
-            glVertex3f( 0.0f, 1.0f, 0.0f);         // Top Of Triangle (Left)
-            glColor3f(0.0f,0.0f,1.0f);             // Blue
-            glVertex3f(-1.0f,-1.0f,-1.0f);         // Left Of Triangle (Left)
-            glColor3f(0.0f,1.0f,0.0f);             // Green
-            glVertex3f(-1.0f,-1.0f, 1.0f);         // Right Of Triangle (Left)
-        glEnd();                                       // Finished Drawing The Triangle
-
-        glLoadIdentity();                          // Reset The Current Modelview Matrix
-        glTranslatef(1.5f,0.0f,-7.0f);             // Move Right 1.5 Units And Into The Screen 6.0
-        glRotatef(rquad,0.0f,1.0f,1.0f);               // Rotate The Quad On The X axis ( NEW )
+        glTranslatef(0.0f,0.0f,(float)tranZ);             // Move/translate the cube back
+        glRotatef(rquad, 0.0f,(float)1,0.0f);               // Rotate The Quad On The X axis ( NEW )
         glColor3f(0.5f,0.5f,1.0f);                 // Set The Color To Blue One Time Only
         glBegin(GL_QUADS);                        // Draw A Quad
             glColor3f(0.0f,1.0f,0.0f);             // Set The Color To Green
@@ -149,9 +154,6 @@ private boolean done = false;
             glVertex3f( 1.0f,-1.0f, 1.0f);         // Bottom Left Of The Quad (Right)
             glVertex3f( 1.0f,-1.0f,-1.0f);         // Bottom Right Of The Quad (Right)
         glEnd();                                       // Done Drawing The Quad
-
-        rtri+=0.2f;                                     // Increase The Rotation Variable For The Triangle ( NEW )
-        rquad-=0.15f;                                   // Decrease The Rotation Variable For The Quad     ( NEW )
         return true;
     }
     private void createWindow() throws Exception {
