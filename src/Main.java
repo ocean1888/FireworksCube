@@ -24,8 +24,9 @@ private boolean done = false;
     private boolean f1 = false;
     private float tranZ = -6;   // negitive is further into the screen
     private float rotY = 1;     // positive is pressing to the rigth
-    private float rtri;                 // Angle For The Triangle ( NEW )
+    private float rotX = 1;     // should be right on...
     private float rquad;                // Angle For The Quad     ( NEW )
+    private Boolean zoomed;
     private DisplayMode displayMode;
 
     public static void main(String args[]) {
@@ -41,6 +42,7 @@ private boolean done = false;
     }
     public void run(boolean fullscreen) {
         this.fullscreen = fullscreen;
+        zoomed = false;
         try {
             init();
             while (!done) {
@@ -56,6 +58,8 @@ private boolean done = false;
             System.exit(0);
         }
     }
+    
+    
     private void mainloop() {
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {       // Exit if Escape is pressed
             done = true;
@@ -70,39 +74,113 @@ private boolean done = false;
         if(!Keyboard.isKeyDown(Keyboard.KEY_F1)) {          // Is F1 Being Pressed?
             f1 = false;
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_S))
+        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
         {
             if(tranZ < -3.5)
-            tranZ += .01;
+            {
+                while(tranZ < -3.5)
+                {
+                   tranZ += .01;
+                   render();
+                   Display.update();
+                   Display.sync(1050);
+                }
+            }
+            else
+            {
+                while(tranZ > -7)
+                {    
+                    tranZ-= .01;
+                    render();
+                    Display.update();
+                    Display.sync(1050);
+                }
+            }
         }
+        
         if(Keyboard.isKeyDown(Keyboard.KEY_W))
         {
-            if(tranZ > -7)
-            tranZ-= .01;
+            //if(tranZ > -7)
+            {
+                rotY = 0;
+                rotX = 1;
+                float temp = rquad;
+                
+                while(rquad - temp  < 30)
+                {    
+                    rquad+=.1;
+                    render();
+                    Display.update();
+                    Display.sync(1050);
+                }
+            }
         }
-        if(tranZ < -4)
+        if(Keyboard.isKeyDown(Keyboard.KEY_S))
+        {
+            //if(tranZ > -7)
+            {
+                rotY = 0;
+                rotX = 1;
+                float temp = rquad;
+                
+                while(temp - rquad   < 30)
+                {    
+                    rquad-=.1;
+                    render();
+                    Display.update();
+                    Display.sync(1050);
+                }
+            }
+        }
+        
+        //if(tranZ < -4)
         {
             if(Keyboard.isKeyDown(Keyboard.KEY_A))
             {
+                /*
+                this is code if we want the user to control how far to turn
                 rotY = -1;
                 rquad-=.1;
+                */
+                rotX =0;
+                rotY = 1;
+                rquad -=.1;
+                float temp = rquad;
+                while (temp - rquad < 90)
+                {
+                    rquad-=.1;
+                    render();
+                    Display.update();
+                    Display.sync(1050);
+                    
+                }
             }
             else if (Keyboard.isKeyDown(Keyboard.KEY_D))
             {
+                /* this is code that will allow the rotation but doesnt 
+                make it do quit what i think we want it to
                 rotY = 1;
                 rquad+=.1;
+                        */
+                rotX =0;
+                rotY = 1;
+                rquad+=.1;
+                float temp = rquad;
+                while (rquad - temp < 90)
+                {
+                    rquad+=.1;
+                    render();
+                    Display.update();
+                    Display.sync(1050);
+                    
+                }
             }
             else 
             {
                 rquad-=0;
-                rotY = 0;
+                //rotY = 0;
             }
-        }
-//        else
-  //      {
-    //        rquad = 0;
-      //  }
-        
+        }    
     }
 
     private void switchMode() {
@@ -120,35 +198,49 @@ private boolean done = false;
        
         glLoadIdentity();                          // Reset The Current Modelview Matrix
         glTranslatef(0.0f,0.0f,(float)tranZ);             // Move/translate the cube back
-        glRotatef(rquad, 0.0f,(float)1,0.0f);               // Rotate The Quad On The X axis ( NEW )
+        glRotatef(rquad, (float)rotX,(float)rotY,0.0f);               // Rotate The Quad On The Y axis ( NEW )
         glColor3f(0.5f,0.5f,1.0f);                 // Set The Color To Blue One Time Only
-        glBegin(GL_QUADS);                        // Draw A Quad
-            glColor3f(0.0f,1.0f,0.0f);             // Set The Color To Green
-            glVertex3f( 1.0f, 1.0f,-1.0f);         // Top Right Of The Quad (Top)
+        glBegin(GL_LINES);                        // Draw A Quad
+            glColor3f(0.45f,.85f,1.0f);             // Set The Color To Green
+            /*glVertex3f( 1.0f, 1.0f,-1.0f);         // Top Right Of The Quad (Top)
             glVertex3f(-1.0f, 1.0f,-1.0f);         // Top Left Of The Quad (Top)
             glVertex3f(-1.0f, 1.0f, 1.0f);         // Bottom Left Of The Quad (Top)
-            glVertex3f( 1.0f, 1.0f, 1.0f);         // Bottom Right Of The Quad (Top)
-            glColor3f(1.0f,0.5f,0.0f);             // Set The Color To Orange
+            glVertex3f( 1.0f, 1.0f, 1.0f);*/         // Bottom Right Of The Quad (Top)
+            /*glColor3f(1.0f,0.5f,0.0f);             // Set The Color To Orange
             glVertex3f( 1.0f,-1.0f, 1.0f);         // Top Right Of The Quad (Bottom)
             glVertex3f(-1.0f,-1.0f, 1.0f);         // Top Left Of The Quad (Bottom)
             glVertex3f(-1.0f,-1.0f,-1.0f);         // Bottom Left Of The Quad (Bottom)
-            glVertex3f( 1.0f,-1.0f,-1.0f);         // Bottom Right Of The Quad (Bottom)
-            glColor3f(1.0f,0.0f,0.0f);             // Set The Color To Red
+            glVertex3f( 1.0f,-1.0f,-1.0f);*/         // Bottom Right Of The Quad (Bottom)
+            //glColor3f(1.0f,0.0f,0.0f);             // Set The Color To Red
             glVertex3f( 1.0f, 1.0f, 1.0f);         // Top Right Of The Quad (Front)
             glVertex3f(-1.0f, 1.0f, 1.0f);         // Top Left Of The Quad (Front)
             glVertex3f(-1.0f,-1.0f, 1.0f);         // Bottom Left Of The Quad (Front)
             glVertex3f( 1.0f,-1.0f, 1.0f);         // Bottom Right Of The Quad (Front)
-            glColor3f(1.0f,1.0f,0.0f);             // Set The Color To Yellow
+           //left back line
+            glVertex3f(-1.0f, 1.0f, 1);
+            glVertex3f(-1.0f, -1.0f, 1);
+            //right back line
+            glVertex3f(1.0f, 1.0f, 1);
+            glVertex3f(1.0f, -1.0f, 1);
+            //top back line
+            //glColor3f(1.0f,1.0f,0.0f);             // Set The Color To Yellow
             glVertex3f( 1.0f,-1.0f,-1.0f);         // Bottom Left Of The Quad (Back)
             glVertex3f(-1.0f,-1.0f,-1.0f);         // Bottom Right Of The Quad (Back)
+            //bottom back line
             glVertex3f(-1.0f, 1.0f,-1.0f);         // Top Right Of The Quad (Back)
             glVertex3f( 1.0f, 1.0f,-1.0f);         // Top Left Of The Quad (Back)
-            glColor3f(0.0f,0.0f,1.0f);             // Set The Color To Blue
+            //left back line
+            glVertex3f(-1.0f, 1.0f, -1);
+            glVertex3f(-1.0f, -1.0f, -1);
+            //right back line
+            glVertex3f(1.0f, 1.0f, -1);
+            glVertex3f(1.0f, -1.0f, -1);
+            //glColor3f(0.0f,0.0f,1.0f);             // Set The Color To Blue
             glVertex3f(-1.0f, 1.0f, 1.0f);         // Top Right Of The Quad (Left)
             glVertex3f(-1.0f, 1.0f,-1.0f);         // Top Left Of The Quad (Left)
             glVertex3f(-1.0f,-1.0f,-1.0f);         // Bottom Left Of The Quad (Left)
             glVertex3f(-1.0f,-1.0f, 1.0f);         // Bottom Right Of The Quad (Left)
-            glColor3f(1.0f,0.0f,1.0f);             // Set The Color To Violet
+            //glColor3f(1.0f,0.0f,1.0f);             // Set The Color To Violet
             glVertex3f( 1.0f, 1.0f,-1.0f);         // Top Right Of The Quad (Right)
             glVertex3f( 1.0f, 1.0f, 1.0f);         // Top Left Of The Quad (Right)
             glVertex3f( 1.0f,-1.0f, 1.0f);         // Bottom Left Of The Quad (Right)
