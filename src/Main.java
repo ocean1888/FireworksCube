@@ -83,7 +83,9 @@ private boolean done = false;
         {
             System.out.println("x = "+(float)((float)Mouse.getX()/(float)displayMode.getWidth()));
             System.out.println("Y = "+Mouse.getY());
-            sparks = Firework.createFirework();
+            Firework fws = new Firework();
+            sparks = fws.createFirework((float)Mouse.getX(), (float)Mouse.getY());
+            
             fg = true;
             for(int i = 0; i < 300; i++)
             {
@@ -216,6 +218,8 @@ private boolean done = false;
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);        
        
         glLoadIdentity(); // Reset The Current Modelview Matrix
+        //fireWorkDraw();
+        //fireWorkUpdate();
         //where we draw the firework and lighting
         glTranslatef(0.0f,0.0f,(float)tranZ); // Move/translate the cube back
         
@@ -230,6 +234,8 @@ private boolean done = false;
         float w =  0.5f;
         float h =  1.0f;
         float d =  0.5f;
+        
+        //
         squar(x, y, z, w, h, d);
         x = -0.2f;
         z = 0.8f;
