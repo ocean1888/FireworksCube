@@ -32,8 +32,14 @@ private boolean done = false;
     private DisplayMode displayMode;
     private FireworkShow fShow;
     private List<Spark> sparks;
+    
     //determins if there is a firework
     private boolean fg = false;
+    
+    /*Here is the city its created near the last line of initGl()
+    * doesnt hold anything until then
+    */
+    private City city;
     public static void main(String args[]) {
         boolean fullscreen = false;
         if(args.length>0) {
@@ -81,11 +87,9 @@ private boolean done = false;
         }
         if(Mouse.isButtonDown(0))
         {
-            System.out.println("x = "+(float)((float)Mouse.getX()/(float)displayMode.getWidth()));
-            System.out.println("Y = "+Mouse.getY());
-            Firework fws = new Firework();
-            sparks = fws.createFirework((float)Mouse.getX(), (float)Mouse.getY());
-            
+            Firework fws = new Firework(displayMode);
+            sparks = fws.createFirework((float)Mouse.getX(), (float)Mouse.getY(), rquad);
+
             fg = true;
             for(int i = 0; i < 300; i++)
             {
@@ -93,7 +97,6 @@ private boolean done = false;
                 Display.update();
             }
             fg = false;
-//            explode();
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
         {
@@ -121,7 +124,7 @@ private boolean done = false;
         
         if(Keyboard.isKeyDown(Keyboard.KEY_W))
         {
-            //if(tranZ > -7)
+            if(tranZ > -7)
             {
                 rotY = 0;
                 rotX = 1;
@@ -138,7 +141,7 @@ private boolean done = false;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_S))
         {
-            //if(tranZ > -7)
+            if(tranZ > -7)
             {
                 rotY = 0;
                 rotX = 1;
@@ -173,7 +176,11 @@ private boolean done = false;
                     render();
                     Display.update();
                     Display.sync(1050);
-                    
+                    if (rquad < -360)
+                    {
+                        rquad = 0;
+                        break;
+                    }
                 }
             }
             else if (Keyboard.isKeyDown(Keyboard.KEY_D))
@@ -193,7 +200,11 @@ private boolean done = false;
                     render();
                     Display.update();
                     Display.sync(1050);
-                    
+                    if (rquad > 360)
+                    {
+                        rquad = 0;
+                        break;
+                    }
                 }
             }
             else 
@@ -216,142 +227,48 @@ private boolean done = false;
 
     private boolean render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);        
-       
-        glLoadIdentity(); // Reset The Current Modelview Matrix
-        //fireWorkDraw();
-        //fireWorkUpdate();
-        //where we draw the firework and lighting
-        glTranslatef(0.0f,0.0f,(float)tranZ); // Move/translate the cube back
-        
-        glRotatef(rquad, (float)rotX,(float)rotY,0.0f); // Rotate The Quad On The Y axis ( NEW )
-        drawOutline();
-        //apply the lighting
-        // if we come up with a way to randomize these numbers and the 
-        // number of sets then we can create the "random" landscape
         float x =  0.0f;
         float y = -1.0f;
         float z =  0.0f;
         float w =  0.5f;
         float h =  1.0f;
         float d =  0.5f;
+        glLoadIdentity(); // Reset The Current Modelview Matrix
+        glTranslatef(0.0f,0.0f,(float)tranZ); // Move/translate the cube back
+
+        glRotatef(rquad, (float)rotX,(float)rotY,0.0f); // Rotate The Quad On The Y axis ( NEW )
+        if(fg)
+        {
+            fireworkDraw();
+        } 
+        ShapeDraw drawer = new ShapeDraw();
+        glColor3f(0.45f,.85f,1.0f);
+        drawer.drawOutline();
+        //apply the lighting
+        // if we come up with a way to randomize these numbers and the 
+        // number of sets then we can create the "random" landscape
+
         
-        //
-        squar(x, y, z, w, h, d);
         x = -0.2f;
         z = 0.8f;
         w = .2f;
         h = .6f;
         d = .2f;
-        squar(x, y, z, w, h, d);
+        glColor3f(0.2f, 0.2f, 0.2f);
+        drawer.squar(x, y, z, w, h, d);
+        city.drawCity();
         return true;
     }
     
-    /*
-    * in the futur perhaps we can leverage this
-    */
-    /*
-    private boolean light()
+    private boolean fireworkDraw()
     {
-        GLfloat light_ambient[] = {0.0, 0.0, 0.0, 1.0};
-        glLight(1, GL_2D, null);
-        glLi
-        return true;
-    }*/
-    
-    
-    private boolean drawOutline()
-    {
-        glPushMatrix();
+        for(Spark s : sparks)
         {
-        glBegin(GL_LINES); 
-        {
-            glColor3f(0.45f,.85f,1.0f);                     
-            glVertex3f( 1.0f, 1.0f, 1.0f);         // Top Right Of The Quad (Front)
-            glVertex3f(-1.0f, 1.0f, 1.0f);         // Top Left Of The Quad (Front)
-            glVertex3f(-1.0f,-1.0f, 1.0f);         // Bottom Left Of The Quad (Front)
-            glVertex3f( 1.0f,-1.0f, 1.0f);         // Bottom Right Of The Quad (Front)
-           //left back line
-            glVertex3f(-1.0f, 1.0f, 1);
-            glVertex3f(-1.0f, -1.0f, 1);
-            //right back line
-            glVertex3f(1.0f, 1.0f, 1);
-            glVertex3f(1.0f, -1.0f, 1);
-            //top back line         
-            glVertex3f( 1.0f,-1.0f,-1.0f);         // Bottom Left Of The Quad (Back)
-            glVertex3f(-1.0f,-1.0f,-1.0f);         // Bottom Right Of The Quad (Back)
-            //bottom back line
-            glVertex3f(-1.0f, 1.0f,-1.0f);         // Top Right Of The Quad (Back)
-            glVertex3f( 1.0f, 1.0f,-1.0f);         // Top Left Of The Quad (Back)
-            //left back line
-            glVertex3f(-1.0f, 1.0f, -1);
-            glVertex3f(-1.0f, -1.0f, -1);
-            //right back line
-            glVertex3f(1.0f, 1.0f, -1);
-            glVertex3f(1.0f, -1.0f, -1);
-            //glColor3f(0.0f,0.0f,1.0f);             // Set The Color To Blue
-            glVertex3f(-1.0f, 1.0f, 1.0f);         // Top Right Of The Quad (Left)
-            glVertex3f(-1.0f, 1.0f,-1.0f);         // Top Left Of The Quad (Left)
-            glVertex3f(-1.0f,-1.0f,-1.0f);         // Bottom Left Of The Quad (Left)
-            glVertex3f(-1.0f,-1.0f, 1.0f);         // Bottom Right Of The Quad (Left)
-            //glColor3f(1.0f,0.0f,1.0f);             // Set The Color To Violet
-            glVertex3f( 1.0f, 1.0f,-1.0f);         // Top Right Of The Quad (Right)
-            glVertex3f( 1.0f, 1.0f, 1.0f);         // Top Left Of The Quad (Right)
-            glVertex3f( 1.0f,-1.0f, 1.0f);         // Bottom Left Of The Quad (Right)
-            glVertex3f( 1.0f,-1.0f,-1.0f);         // Bottom Right Of The Quad (Right)
+            s.draw();
         }
-        glEnd();                                       // Done Drawing The Quad
-        }
-        glPopMatrix();
         return true;
     }
-    
-    /*
-     * please insure that the position is set at the bottom left
-    */
-    private boolean squar(float x, float y, float z, 
-                          float w, float h, float d)
-    {        
-        glPushMatrix();
-        {
-            glBegin(GL_QUADS);
-            {
-                glColor3f(0.2f, 0.2f, 0.2f);
-                //front
-                glVertex3f(x, y, z);
-                glVertex3f(x + w, y, z);
-                glVertex3f(x + w, y + h, z);
-                glVertex3f(x, y + h, z);
-                //left side
-                glVertex3f(x, y, z);
-                glVertex3f(x, y, z + d);
-                glVertex3f(x, y + h, z + d);
-                glVertex3f(x, y, z);
-                //back side
-                glVertex3f(x, y, z + d);
-                glVertex3f(x + w, y, z + d);
-                glVertex3f(x + w, y + h, z + d);
-                glVertex3f(x, y + h, z + d);
-                //rigt side
-                glVertex3f(x + w, y, z);
-                glVertex3f(x + w, y, z + d);
-                glVertex3f(x + w, y + h, z + d);
-                glVertex3f(x + w, y + h, z);
-                //top side
-                glVertex3f(x, y + h, z);
-                glVertex3f(x + w, y + h, z);
-                glVertex3f(x + w, y + h, z + d);
-                glVertex3f(x, y + h, z + d);
-                //bottom
-                glVertex3f(x, y, z);
-                glVertex3f(x + w, y, z);
-                glVertex3f(x + w, y, z + d);
-                glVertex3f(x, y, z + d);              
-            }
-            glEnd();
-        }
-        glPopMatrix();
-        return true;
-    }
+        
     private void createWindow() throws Exception {
         Display.setFullscreen(fullscreen);
         DisplayMode d[] = Display.getAvailableDisplayModes();
@@ -394,6 +311,9 @@ private boolean done = false;
 
         // Really Nice Perspective Calculations
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        
+        //Creating the city!! hope this will work
+        city = new City();
     }
     private static void cleanup() {
         Display.destroy();
