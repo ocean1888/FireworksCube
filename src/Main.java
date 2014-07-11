@@ -85,19 +85,7 @@ private boolean done = false;
         if(!Keyboard.isKeyDown(Keyboard.KEY_F1)) {          // Is F1 Being Pressed?
             f1 = false;
         }
-        if(Mouse.isButtonDown(0))
-        {
-            Firework fws = new Firework(displayMode);
-            sparks = fws.createFirework((float)Mouse.getX(), (float)Mouse.getY(), rquad);
-
-            fg = true;
-            for(int i = 0; i < 300; i++)
-            {
-                render();
-                Display.update();
-            }
-            fg = false;
-        }
+        
         if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
         {
             if(tranZ < -3.5)
@@ -124,7 +112,7 @@ private boolean done = false;
         
         if(Keyboard.isKeyDown(Keyboard.KEY_W))
         {
-            if(tranZ > -7)
+            if(tranZ < -6)
             {
                 rotY = 0;
                 rotX = 1;
@@ -141,7 +129,7 @@ private boolean done = false;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_S))
         {
-            if(tranZ > -7)
+            if(tranZ < -6)
             {
                 rotY = 0;
                 rotX = 1;
@@ -157,9 +145,9 @@ private boolean done = false;
             }
         }
         
-        //if(tranZ < -4)
+        if(tranZ < -4)
         {
-            if(Keyboard.isKeyDown(Keyboard.KEY_A))
+            if(Keyboard.isKeyDown(Keyboard.KEY_D))
             {
                 /*
                 this is code if we want the user to control how far to turn
@@ -183,7 +171,7 @@ private boolean done = false;
                     }
                 }
             }
-            else if (Keyboard.isKeyDown(Keyboard.KEY_D))
+            else if (Keyboard.isKeyDown(Keyboard.KEY_A))
             {
                 /* this is code that will allow the rotation but doesnt 
                 make it do quit what i think we want it to
@@ -212,7 +200,23 @@ private boolean done = false;
                 rquad-=0;
                 //rotY = 0;
             }
-        }    
+        }
+        else
+        {
+            if(Mouse.isButtonDown(0))
+            {
+                Firework fws = new Firework(displayMode);
+                sparks = fws.createFirework((float)Mouse.getX(), (float)Mouse.getY(), rquad);
+
+                fg = true;
+                for(int i = 0; i < 300; i++)
+                {
+                    render();
+                    Display.update();
+                }
+                fg = false;
+            }
+        }
     }
 
     private void switchMode() {
