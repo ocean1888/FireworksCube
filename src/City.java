@@ -15,8 +15,8 @@ public class City {
         for(int i = 0; i < 10; i++)
         {
             Random generator = new Random();
-            tempX = (generator.nextFloat()) - 1;
-            tempZ = (generator.nextFloat()) - 1;
+            tempX = (generator.nextFloat()) - .85f;
+            tempZ = (generator.nextFloat()) - .75f;
             Building cube = new Building(tempX, -1, tempZ);
             city.add(cube);
         }

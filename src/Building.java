@@ -1,5 +1,6 @@
 
 import java.util.Random;
+import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.glColor3f;
 
 
@@ -27,8 +28,10 @@ public class Building {
     {
         ShapeDraw drawer = new ShapeDraw();
         glColor3f(.5f, .5f, .5f);
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
         drawer.squar(minX, minY, minZ, w, h, d);
         glColor3f(.1f, .1f, .1f);
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
         drawer.squar(minX, minY, minZ, w, h, d);
         return true;
     }

@@ -258,8 +258,8 @@ private boolean done = false;
         w = .2f;
         h = .6f;
         d = .2f;
-        glColor3f(0.2f, 0.2f, 0.2f);
-        drawer.squar(x, y, z, w, h, d);
+        //glColor3f(0.2f, 0.2f, 0.2f);
+        //drawer.squar(x, y, z, w, h, d);
         city.drawCity();
         return true;
     }
