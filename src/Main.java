@@ -209,10 +209,12 @@ private boolean done = false;
                 sparks = fws.createFirework((float)Mouse.getX(), (float)Mouse.getY(), rquad);
 
                 fg = true;
-                for(int i = 0; i < 300; i++)
+                for(int i = 0; i < 600; i++)
                 {
                     render();
                     Display.update();
+                    Display.sync(1600);
+
                 }
                 fg = false;
             }
@@ -269,6 +271,7 @@ private boolean done = false;
         for(Spark s : sparks)
         {
             s.draw();
+            s.update(rquad);
         }
         return true;
     }

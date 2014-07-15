@@ -28,6 +28,9 @@ public class Spark {
     private double dir;
     private double speed;
     private DisplayMode display;
+    private double acceleration;
+    private long spawnTime;
+    
     public Spark(float pX, float pY, float pZ, double pD, double pS, DisplayMode pDisplay)
     {
         x = pX; 
@@ -36,6 +39,8 @@ public class Spark {
         dir = pD;
         speed = pS;
         display = pDisplay;
+        acceleration = 1.0 / speed * 0.5;
+        spawnTime = System.currentTimeMillis();
     }
 
     public float getX() {
@@ -63,12 +68,43 @@ public class Spark {
         return speed;
     }
     
+    public void update(float rquad)
+    {
+        long currentTime = System.currentTimeMillis();
+        long currentLifeLength = currentTime - spawnTime;
+        
+        int cal = (int)rquad/90;
+        
+        
+            double currentSpeed = speed + acceleration * currentLifeLength;
+            double dx = (currentSpeed * Math.cos(Math.toRadians(dir)))/50000;
+            double dy = (currentSpeed * Math.sin(Math.toRadians(dir)))/50000;
+
+        if(cal == 1 || cal == -3)
+        {
+            z += dx;
+        }
+        else if (cal == 2 || cal == -2)
+        {
+            x += -dx;
+        }
+        else if (cal == 3 || cal == -1)
+        {
+            z += -dx;
+            x = 0;
+        }
+        else 
+            x += dx;
+           // x += dx;
+            y += dy;  
+    }
+    
     public void draw()
     {
  
-        float w =  0.05f;
-        float h =  0.05f;
-        float d =  0.05f;
+        float w =  0.025f;
+        float h =  0.025f;
+        float d =  0.025f;
         glColor3f(1f, 0f, 0f);
         ShapeDraw drawer = new ShapeDraw();
         drawer.squar(x, y, z, w, h, d);

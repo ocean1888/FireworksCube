@@ -39,7 +39,7 @@ public class Firework {
             x = 0;
         }
         List<Spark>sparks = new ArrayList<Spark>();
-        for(int i = 0; i < 50; i++)
+        for(int i = 0; i < 150; i++)
         {
             double d = 360 * generator.nextDouble();
             double s = 10 * generator.nextDouble() + 5;
