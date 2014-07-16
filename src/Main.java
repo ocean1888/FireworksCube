@@ -210,18 +210,52 @@ private boolean done = false;
             {
                 Firework fws = new Firework(displayMode);
                 sparks = fws.createFirework((float)Mouse.getX(), (float)Mouse.getY(), rquad);
-
+                    float xpos = ((float)Mouse.getX()-(displayMode.getWidth() / 2))/displayMode.getWidth()*2 * 1.85f;
+                    float ypos = ((float)Mouse.getY()- (displayMode.getHeight() / 2))/displayMode.getHeight()*2 * 1.45f;
+                    float zpos = 0.0f;
+                    int cal = (int)rquad/90;
+                    if(cal == 1 || cal == -3)
+                    {
+                        zpos = xpos;
+                        xpos = 0;
+                    }
+                    else if (cal == 2 || cal == -2)
+                    {
+                        xpos = -xpos;
+                    }
+                    else if (cal == 3 || cal == -1)
+                    {
+                        zpos = -xpos;
+                        xpos = 0;
+                    }
                 fg = true;
                 for(int i = 0; i < 600; i++)
                 {
+                    glEnable(GL_LIGHT1);
+                    glEnable(GL_COLOR_MATERIAL);
+                    float slr = 1.0f;
+                    float slg = 1.0f;
+                    float slb = 0.0f;
+                    
+                    FloatBuffer AmbientLight = fws.getFireworkColor();
+                    FloatBuffer Position2 = BufferUtils.createFloatBuffer(4);
+                    Position2.put(xpos).
+                            put(ypos).put(zpos).put(1.0f).flip();
+                    glLight(GL_LIGHT1, GL_DIFFUSE , AmbientLight);
+                    glLight(GL_LIGHT1, GL_POSITION, Position2);
                     render();
                     Display.update();
                     Display.sync(1600);
 
                 }
                 fg = false;
+                glDisable(GL_LIGHT1);
             }
         }
+       if (Keyboard.isKeyDown(Keyboard.KEY_R))
+       {
+           city = new City();
+       }
     }
 
     private void switchMode() {
@@ -307,18 +341,18 @@ private boolean done = false;
         glClearDepth(1.0); // Depth Buffer Setup
         glEnable(GL_DEPTH_TEST); // Enables Depth Testing
         glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
-        glEnable(GL_LIGHTING);
-        glEnable(GL_LIGHT0);
-        glEnable(GL_COLOR_MATERIAL);
-        float slr = 1.0f;
-        float slg = 0.0f;
-        float slb = 0.0f;
-        FloatBuffer SpecularLight = BufferUtils.createFloatBuffer(4);
-        FloatBuffer Position = BufferUtils.createFloatBuffer(4);
-        SpecularLight.put(slr).put(slg).put(slb).put(1.0f).flip();
-        Position.put(0.5f).put(1.0f).put(0.5f).put(1.0f).flip();
-        glLight(GL_LIGHT0, GL_SPECULAR,SpecularLight);
-        glLight(GL_LIGHT0, GL_POSITION, Position);
+         glEnable(GL_LIGHTING);
+                    glEnable(GL_LIGHT0);
+                    glEnable(GL_COLOR_MATERIAL);
+                    float slr = 1.0f;
+                    float slg = 1.0f;
+                    float slb = 1.0f;
+                    FloatBuffer SpecularLight = BufferUtils.createFloatBuffer(4);
+                    FloatBuffer Position = BufferUtils.createFloatBuffer(4);
+                    SpecularLight.put(slr).put(slg).put(slb).put(1.0f).flip();
+                    Position.put(0.0f).put(-3.0f).put(0.0f).put(1.0f).flip();
+                    glLight(GL_LIGHT0, GL_SPECULAR,SpecularLight);
+                    glLight(GL_LIGHT0, GL_POSITION, Position);
 
         glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
         glLoadIdentity(); // Reset The Projection Matrix

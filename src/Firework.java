@@ -1,8 +1,9 @@
 
-import java.awt.Graphics2D;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.DisplayMode;
 
 
@@ -16,7 +17,7 @@ public class Firework {
     private float randcolorR;
     private float randcolorG;
     private float randcolorB;
-    
+    private FloatBuffer fireworkColor = BufferUtils.createFloatBuffer(4);
     public Firework(DisplayMode pd)
     {
         display = pd;
@@ -55,5 +56,10 @@ public class Firework {
             sparks.add(temp);
         }
         return sparks;
+    }
+    FloatBuffer getFireworkColor()
+    {
+        fireworkColor.put(randcolorR).put(randcolorG).put(randcolorB).put(1.0f).flip();
+        return fireworkColor;
     }
 }

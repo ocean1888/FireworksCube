@@ -30,7 +30,7 @@ public class Building {
         glColor3f(.5f, .5f, .5f);
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
         drawer.squar(minX, minY, minZ, w, h, d);
-        glColor3f(.1f, .1f, .1f);
+        glColor3f(0.3f, 0.3f, 0.3f);
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
         drawer.squar(minX, minY, minZ, w, h, d);
         return true;
