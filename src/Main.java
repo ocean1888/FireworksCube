@@ -14,6 +14,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 import static org.lwjgl.util.glu.GLU.gluOrtho2D;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 /**
  * @author jediTofu
@@ -30,9 +32,8 @@ private boolean done = false;
     private float rquad;                // Angle For The Quad     ( NEW )
     private Boolean zoomed;
     private DisplayMode displayMode;
-    private FireworkShow fShow;
+    // private FireworkShow fShow;
     private List<Spark> sparks;
-    
     //determins if there is a firework
     private boolean fg = false;
     
