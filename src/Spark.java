@@ -1,4 +1,5 @@
 
+import java.util.Random;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
@@ -30,8 +31,11 @@ public class Spark {
     private DisplayMode display;
     private double acceleration;
     private long spawnTime;
+    private float randcolorR;
+    private float randcolorG;
+    private float randcolorB;
     
-    public Spark(float pX, float pY, float pZ, double pD, double pS, DisplayMode pDisplay)
+    public Spark(float pX, float pY, float pZ, double pD, double pS, DisplayMode pDisplay, float colorR, float colorG, float colorB)
     {
         x = pX; 
         y = pY;
@@ -41,6 +45,9 @@ public class Spark {
         display = pDisplay;
         acceleration = 1.0 / speed * 0.5;
         spawnTime = System.currentTimeMillis();
+        randcolorR = colorR;
+        randcolorG = colorG;
+        randcolorB = colorB;
     }
 
     public float getX() {
@@ -105,7 +112,7 @@ public class Spark {
         float w =  0.025f;
         float h =  0.025f;
         float d =  0.025f;
-        glColor3f(1f, 0f, 0f);
+        glColor3f(randcolorR, randcolorG, randcolorB);
         ShapeDraw drawer = new ShapeDraw();
         drawer.squar(x, y, z, w, h, d);
     }

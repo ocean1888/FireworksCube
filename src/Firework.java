@@ -13,6 +13,9 @@ import org.lwjgl.opengl.DisplayMode;
 public class Firework {
     private Random generator = new Random();
     private DisplayMode display;
+    private float randcolorR;
+    private float randcolorG;
+    private float randcolorB;
     
     public Firework(DisplayMode pd)
     {
@@ -38,13 +41,17 @@ public class Firework {
             z = -x;
             x = 0;
         }
+        Random rand = new Random();
+        randcolorR = rand.nextFloat();
+        randcolorG = rand.nextFloat();
+        randcolorB = rand.nextFloat();
         List<Spark>sparks = new ArrayList<Spark>();
         for(int i = 0; i < 150; i++)
         {
             double d = 360 * generator.nextDouble();
             double s = 10 * generator.nextDouble() + 5;
             Spark temp; 
-            temp = new Spark(x, y, z, d, s, display);
+            temp = new Spark(x, y, z, d, s, display,randcolorR, randcolorG, randcolorB);
             sparks.add(temp);
         }
         return sparks;

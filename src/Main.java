@@ -30,7 +30,7 @@ private boolean done = false;
     private float rquad;                // Angle For The Quad     ( NEW )
     private Boolean zoomed;
     private DisplayMode displayMode;
-    private FireworkShow fShow;
+   // private FireworkShow fShow;
     private List<Spark> sparks;
     
     //determins if there is a firework
