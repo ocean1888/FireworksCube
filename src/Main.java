@@ -1,9 +1,11 @@
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -11,6 +13,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL44.*;
 
 import static org.lwjgl.util.glu.GLU.gluOrtho2D;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
@@ -304,6 +307,18 @@ private boolean done = false;
         glClearDepth(1.0); // Depth Buffer Setup
         glEnable(GL_DEPTH_TEST); // Enables Depth Testing
         glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_COLOR_MATERIAL);
+        float slr = 1.0f;
+        float slg = 0.0f;
+        float slb = 0.0f;
+        FloatBuffer SpecularLight = BufferUtils.createFloatBuffer(4);
+        FloatBuffer Position = BufferUtils.createFloatBuffer(4);
+        SpecularLight.put(slr).put(slg).put(slb).put(1.0f).flip();
+        Position.put(0.5f).put(1.0f).put(0.5f).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_SPECULAR,SpecularLight);
+        glLight(GL_LIGHT0, GL_POSITION, Position);
 
         glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
         glLoadIdentity(); // Reset The Projection Matrix
