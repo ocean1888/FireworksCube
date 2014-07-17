@@ -212,7 +212,7 @@ private boolean done = false;
                 sparks = fws.createFirework((float)Mouse.getX(), (float)Mouse.getY(), rquad);
                     float xpos = ((float)Mouse.getX()-(displayMode.getWidth() / 2))/displayMode.getWidth()*2 * 1.85f;
                     float ypos = ((float)Mouse.getY()- (displayMode.getHeight() / 2))/displayMode.getHeight()*2 * 1.45f;
-                    float zpos = 0.0f;
+                    float zpos = 0.5f;
                     int cal = (int)rquad/90;
                     if(cal == 1 || cal == -3)
                     {
@@ -221,11 +221,11 @@ private boolean done = false;
                     }
                     else if (cal == 2 || cal == -2)
                     {
-                        xpos = -xpos;
+                        xpos = -(xpos);
                     }
                     else if (cal == 3 || cal == -1)
                     {
-                        zpos = -xpos;
+                        zpos = -(xpos);
                         xpos = 0;
                     }
                 fg = true;
@@ -233,14 +233,9 @@ private boolean done = false;
                 {
                     glEnable(GL_LIGHT1);
                     glEnable(GL_COLOR_MATERIAL);
-                    float slr = 1.0f;
-                    float slg = 1.0f;
-                    float slb = 0.0f;
-                    
                     FloatBuffer AmbientLight = fws.getFireworkColor();
                     FloatBuffer Position2 = BufferUtils.createFloatBuffer(4);
-                    Position2.put(xpos).
-                            put(ypos).put(zpos).put(1.0f).flip();
+                    Position2.put(xpos).put(ypos).put(zpos).put(1.0f).flip();
                     glLight(GL_LIGHT1, GL_DIFFUSE , AmbientLight);
                     glLight(GL_LIGHT1, GL_POSITION, Position2);
                     render();
@@ -330,7 +325,6 @@ private boolean done = false;
     }
     private void init() throws Exception {
         createWindow();
-
         initGL();
     }
 
@@ -342,17 +336,22 @@ private boolean done = false;
         glEnable(GL_DEPTH_TEST); // Enables Depth Testing
         glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
          glEnable(GL_LIGHTING);
-                    glEnable(GL_LIGHT0);
-                    glEnable(GL_COLOR_MATERIAL);
-                    float slr = 1.0f;
-                    float slg = 1.0f;
-                    float slb = 1.0f;
-                    FloatBuffer SpecularLight = BufferUtils.createFloatBuffer(4);
-                    FloatBuffer Position = BufferUtils.createFloatBuffer(4);
-                    SpecularLight.put(slr).put(slg).put(slb).put(1.0f).flip();
-                    Position.put(0.0f).put(-3.0f).put(0.0f).put(1.0f).flip();
+         glEnable(GL_LIGHT0);
+         glEnable(GL_LIGHT2);
+         glEnable(GL_COLOR_MATERIAL);
+         float slr = 1.0f;
+         float slg = 1.0f;
+         float slb = 1.0f;
+         FloatBuffer SpecularLight = BufferUtils.createFloatBuffer(4);
+         FloatBuffer Position = BufferUtils.createFloatBuffer(4);
+         FloatBuffer AmbientLight = BufferUtils.createFloatBuffer(4);
+         SpecularLight.put(slr).put(slg).put(slb).put(1.0f).flip();
+         AmbientLight.put(0.4f).put(0.4f).put(0.4f).put(1.0f).flip();
+         Position.put(0.0f).put(-3.0f).put(0.0f).put(0.0f).flip();
                     glLight(GL_LIGHT0, GL_SPECULAR,SpecularLight);
+                    glLight(GL_LIGHT2, GL_AMBIENT, AmbientLight);
                     glLight(GL_LIGHT0, GL_POSITION, Position);
+                    glLight(GL_LIGHT2, GL_POSITION, Position);
 
         glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
         glLoadIdentity(); // Reset The Projection Matrix
